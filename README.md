@@ -1,1 +1,1 @@
-# Tripleten web_project_around
+# Tripleten Around the U.S.

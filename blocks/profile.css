@@ -1,0 +1,58 @@
+.profile {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profile__user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.profile__picture {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+}
+
+.profile__information {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  margin-left: 30px;
+}
+
+.profile__name {
+  margin: 0;
+  margin-bottom: 16px;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 42px;
+}
+
+.profile__profession {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.profile__button {
+  color: white;
+  border: 1px solid white;
+  cursor: pointer;
+}
+
+.profile__button_edit {
+  height: 24px;
+  width: 24px;
+  margin-left: 18px;
+  margin-bottom: 22px;
+}
+
+.profile__button_add {
+  width: 150px;
+  height: 50px;
+}

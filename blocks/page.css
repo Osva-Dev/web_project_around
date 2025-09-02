@@ -1,0 +1,9 @@
+.page {
+  max-width: 880px;
+  margin: auto;
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
+  line-height: 0.8;
+  background-color: black;
+  color: white;
+}

@@ -7,9 +7,53 @@
     <meta name="description" content="Portafolio de Osvaldo O. en Tripleten" />
     <meta name="keywords" content="html, css" />
     <meta name="author" content="Osvaldo O." />
+    <link rel="stylesheet" href="./vendor/normalize.css" />
     <link rel="stylesheet" href="./pages/index.css" />
   </head>
   <body>
-    <div class="page"></div>
+    <div class="page">
+      <header class="header">
+        <img class="header__logo" src="logo.svg" alt="Around the U.S." />
+      </header>
+
+      <main class="main">
+        <section class="profile">
+          <div class="profile__user">
+            <img
+              class="profile__picture"
+              src="images/Profile_Photo.jpg"
+              alt="Profile Picture"
+            />
+            <div class="profile__information">
+              <h2 class="profile__name">Osvaldo Ochoa</h2>
+              <p class="profile__profession">Developer Web</p>
+            </div>
+            <button type="button" class="profile__button profile__button_edit">
+              <img src="./images/icons/edit.png" alt="Edit Button" />
+            </button>
+          </div>
+          <div class="profile__add">
+            <button type="button" class="profile__button profile__button_add">
+              🞣
+            </button>
+          </div>
+        </section>
+
+        <section class="gallery">
+          <div class="gallery__card">
+            <img
+              class="card__image"
+              src=".//images/places/Valle_de_Yosemite.jpg"
+              alt="Valle de Yosemite"
+            />
+            <p class="card__title">Valle de Yosemite</p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p class="footer__copyright">&#169; 2024 Around The U.S.</p>
+      </footer>
+    </div>
   </body>
 </html>

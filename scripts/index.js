@@ -47,6 +47,7 @@ function addNewCard(cardName, cardLink) {
   const card = document.createElement("div");
   card.innerHTML = `
     <div class="place__card">
+    <img class="place__delete" src="./images/icons/trash.svg">
       <img class="place__image" src="${cardLink}" alt="${cardName}">
       <div class="place__content">
         <h2 class="place__title">${cardName}</h2>
@@ -67,6 +68,11 @@ function addNewCard(cardName, cardLink) {
     } else {
       placeLike.src = "./images/icons/heart.svg";
     }
+  });
+
+  const placeDelete = card.querySelector(".place__delete");
+  placeDelete.addEventListener("click", () => {
+    card.remove(); // borra la tarjeta completa
   });
 
   place.prepend(card); // prepend para que la nueva aparezca al inicio

@@ -71,6 +71,20 @@
   margin-bottom: 40px;
 }
 
+.popup__images {
+  margin: 190px auto 0;
+}
+
+.popup__content-image {
+  max-width: fit-content;
+  margin: auto;
+}
+
+.popup__image {
+  width: 400px;
+  height: 400px;
+}
+
 @media screen and (min-width: 320px) and (max-width: 585px) {
   .popup__button_close {
     right: 300px;

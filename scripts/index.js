@@ -13,6 +13,8 @@ let place = document.querySelector(".place");
 // Variable para saber qué modo está activo
 let currentMode = "";
 
+//Variable de me encanta
+
 // ---------- Abrir popup en modo "Editar Perfil" ----------
 function openEdit() {
   currentMode = "edit";
@@ -49,13 +51,24 @@ function addNewCard(cardName, cardLink) {
       <div class="place__content">
         <h2 class="place__title">${cardName}</h2>
         <img
-          class="place__like"
+          class="place__like place__like_active"
           src="./images/icons/heart.svg"
           alt="Like"
         />
       </div>
     </div>
   `;
+
+  let placeLike = card.querySelector(".place__like");
+  placeLike.addEventListener("click", () => {
+    // primero comprobamos si ya está el icono 'completo'
+    if (placeLike.src.includes("heart.svg")) {
+      placeLike.src = "./images/icons/heart-complete.svg";
+    } else {
+      placeLike.src = "./images/icons/heart.svg";
+    }
+  });
+
   place.prepend(card); // prepend para que la nueva aparezca al inicio
 }
 

@@ -1,12 +1,11 @@
 .place {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start; /* inicia de izquierda a derecha */
   row-gap: 17px;
   column-gap: 20px;
-  margin-top: 50px;
-  margin-bottom: 67px;
-  max-width: 890px;
+  margin: 50px auto 67px auto; /* centra el bloque en la página */
+  max-width: 950px;
 }
 
 .place__card {
@@ -58,4 +57,16 @@
   top: 18px;
   cursor: pointer;
   z-index: 0;
+}
+
+@media screen and (max-width: 950px) {
+  .place {
+    max-width: 585px;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .place {
+    justify-content: center;
+  }
 }

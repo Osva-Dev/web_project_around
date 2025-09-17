@@ -10,10 +10,9 @@ let inputName = document.querySelector(".popup__input_name");
 let inputAbout = document.querySelector(".popup__input_about");
 let place = document.querySelector(".place");
 
+const popimg = document.querySelector(".popup__images");
 // Variable para saber qué modo está activo
 let currentMode = "";
-
-//Variable de me encanta
 
 // ---------- Abrir popup en modo "Editar Perfil" ----------
 function openEdit() {
@@ -23,6 +22,8 @@ function openEdit() {
   inputAbout.placeholder = "Acerca de mi";
   inputName.value = name.textContent;
   inputAbout.value = profession.textContent;
+  form.style.display = ""; // aseguramos que se muestre el form
+  popimg.style.display = "none"; // ocultamos popup imagen
   popup.classList.add("popup_opened");
 }
 
@@ -34,11 +35,15 @@ function openAdd() {
   inputAbout.placeholder = "URL de la imagen";
   inputName.value = "";
   inputAbout.value = "";
+  form.style.display = ""; // mostramos form
+  popimg.style.display = "none"; // ocultamos popup imagen
   popup.classList.add("popup_opened");
 }
 
 // ---------- Cerrar popup ----------
 function closePopup() {
+  form.style.display = "";
+  popimg.style.display = "";
   popup.classList.remove("popup_opened");
 }
 
@@ -47,7 +52,7 @@ function addNewCard(cardName, cardLink) {
   const card = document.createElement("div");
   card.innerHTML = `
     <div class="place__card">
-    <img class="place__delete" src="./images/icons/trash.svg">
+      <img class="place__delete" src="./images/icons/trash.svg">
       <img class="place__image" src="${cardLink}" alt="${cardName}">
       <div class="place__content">
         <h2 class="place__title">${cardName}</h2>
@@ -60,9 +65,9 @@ function addNewCard(cardName, cardLink) {
     </div>
   `;
 
+  // Like
   let placeLike = card.querySelector(".place__like");
   placeLike.addEventListener("click", () => {
-    // primero comprobamos si ya está el icono 'completo'
     if (placeLike.src.includes("heart.svg")) {
       placeLike.src = "./images/icons/heart-complete.svg";
     } else {
@@ -70,12 +75,19 @@ function addNewCard(cardName, cardLink) {
     }
   });
 
+  // Delete
   const placeDelete = card.querySelector(".place__delete");
   placeDelete.addEventListener("click", () => {
-    card.remove(); // borra la tarjeta completa
+    card.remove();
   });
 
-  place.prepend(card); // prepend para que la nueva aparezca al inicio
+  // Abrir popup imagen
+  const placeImage = card.querySelector(".place__image");
+  placeImage.addEventListener("click", () => {
+    imagePopup(cardName, cardLink);
+  });
+
+  place.prepend(card);
 }
 
 // ---------- Manejo del formulario ----------
@@ -83,11 +95,9 @@ function handleSubmit(e) {
   e.preventDefault();
 
   if (currentMode === "edit") {
-    // Guardar cambios del perfil
     name.textContent = inputName.value;
     profession.textContent = inputAbout.value;
   } else if (currentMode === "add") {
-    // Agregar nueva tarjeta
     const cardName = inputName.value;
     const cardLink = inputAbout.value;
 
@@ -133,7 +143,18 @@ const initialCards = [
   },
 ];
 
-// Renderizar las iniciales
 initialCards.forEach((element) => {
   addNewCard(element.name, element.link);
 });
+
+// ---------- Popup Imagen ----------
+function imagePopup(name, link) {
+  const popimag = popimg.querySelector(".popup__image");
+  const poptxt = popimg.querySelector(".popup__paragraph");
+  popimag.src = link;
+  popimag.alt = name;
+  poptxt.textContent = name;
+  form.style.display = "none"; // ocultamos form
+  popimg.style.display = ""; // mostramos imagen
+  popup.classList.add("popup_opened");
+}

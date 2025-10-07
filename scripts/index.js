@@ -1,44 +1,30 @@
-let popup = document.querySelector(".popup");
-let buttonClose = document.querySelector(".popup__button_close");
-let form = document.querySelector(".popup__container");
-let title = document.querySelector(".popup__subtitle");
-let name = document.querySelector(".profile__name");
-let profession = document.querySelector(".profile__profession");
-let inputName = document.querySelector(".popup__input_name");
-let inputAbout = document.querySelector(".popup__input_about");
-let buttonEdit = document.querySelector(".profile__button_edit");
-let buttonAdd = document.querySelector(".profile__button_add");
-let place = document.querySelector(".place");
+const popup = document.querySelector(".popup");
+const buttonClose = document.querySelector(".popup__button_close");
+const form = document.querySelector(".popup__container");
+const title = document.querySelector(".popup__subtitle");
+const nameEl = document.querySelector(".profile__name");
+const profession = document.querySelector(".profile__profession");
+const inputName = document.querySelector(".popup__input_name");
+const inputAbout = document.querySelector(".popup__input_about");
+const buttonEdit = document.querySelector(".profile__button_edit");
+const buttonAdd = document.querySelector(".profile__button_add");
+const place = document.querySelector(".place");
 const popImg = document.querySelector(".popup__images");
-const popimag = popImg.querySelector(".popup__image");
-const poptxt = popImg.querySelector(".popup__paragraph");
+const popImage = popImg.querySelector(".popup__image");
+const popTxt = popImg.querySelector(".popup__paragraph");
+
 let currentMode = "";
 
 const initialCards = [
-  {
-    name: "Valle de Yosemite",
-    link: "./images/places/Valle_de_Yosemite.jpg",
-  },
-  {
-    name: "Lago Louise",
-    link: "./images/places/Lago_Louise.png",
-  },
-  {
-    name: "Montañas Calvas",
-    link: "./images/places/Montañas_Calvas.png",
-  },
-  {
-    name: "Latemar",
-    link: "./images/places/Latemar.png",
-  },
+  { name: "Valle de Yosemite", link: "./images/places/Valle_de_Yosemite.jpg" },
+  { name: "Lago Louise", link: "./images/places/Lago_Louise.png" },
+  { name: "Montañas Calvas", link: "./images/places/Montañas_Calvas.png" },
+  { name: "Latemar", link: "./images/places/Latemar.png" },
   {
     name: "Parque Nacional de la Vanoise",
     link: "./images/places/Vanois__National.png",
   },
-  {
-    name: "Lago di Braies",
-    link: "./images/places/Lago_di_Braes.png",
-  },
+  { name: "Lago di Braies", link: "./images/places/Lago_di_Braes.png" },
 ];
 
 function openEdit() {
@@ -46,9 +32,9 @@ function openEdit() {
   title.textContent = "Editar Perfil";
   inputName.placeholder = "Nombre";
   inputAbout.placeholder = "Acerca de mi";
-  inputName.value = name.textContent;
+  inputName.value = nameEl.textContent;
   inputAbout.value = profession.textContent;
-  form.style.display = "";
+  form.style.display = "block";
   popImg.style.display = "none";
   popup.classList.add("popup_opened");
 }
@@ -60,31 +46,42 @@ function openAdd() {
   inputAbout.placeholder = "URL de la imagen";
   inputName.value = "";
   inputAbout.value = "";
-  form.style.display = "";
+  form.style.display = "block";
   popImg.style.display = "none";
   popup.classList.add("popup_opened");
 }
 
 function closePopup() {
-  form.style.display = "";
-  popImg.style.display = "";
+  form.style.display = "block";
+  popImg.style.display = "none";
   popup.classList.remove("popup_opened");
 }
 
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && popup.classList.contains("popup_opened")) {
+    closePopup();
+  }
+});
+
+popup.addEventListener("click", (e) => {
+  if (e.target === popup) {
+    closePopup();
+  }
+});
+
 function addNewCard(cardName, cardLink) {
   const card = document.createElement("div");
+  card.classList.add("place__card");
   card.innerHTML = `
-    <div class="place__card">
-      <img class="place__delete" src="./images/icons/trash.svg">
-      <img class="place__image" src="${cardLink}" alt="${cardName}">
-      <div class="place__content">
-        <h2 class="place__title">${cardName}</h2>
-        <img class="place__like place__like_active" src="./images/icons/heart.svg" alt="Like"/>
-      </div>
+    <img class="place__delete" src="./images/icons/trash.svg" alt="Eliminar">
+    <img class="place__image" src="${cardLink}" alt="${cardName}">
+    <div class="place__content">
+      <h2 class="place__title">${cardName}</h2>
+      <img class="place__like place__like_active" src="./images/icons/heart.svg" alt="Like">
     </div>
   `;
 
-  let placeLike = card.querySelector(".place__like");
+  const placeLike = card.querySelector(".place__like");
   placeLike.addEventListener("click", () => {
     if (placeLike.src.includes("heart.svg")) {
       placeLike.src = "./images/icons/heart-complete.svg";
@@ -102,10 +99,19 @@ function addNewCard(cardName, cardLink) {
   place.prepend(card);
 }
 
+function imagePopup(name, link) {
+  popImage.src = link;
+  popImage.alt = name;
+  popTxt.textContent = name;
+  form.style.display = "none";
+  popImg.style.display = "block";
+  popup.classList.add("popup_opened");
+}
+
 function handleSubmit(e) {
   e.preventDefault();
   if (currentMode === "edit") {
-    name.textContent = inputName.value;
+    nameEl.textContent = inputName.value;
     profession.textContent = inputAbout.value;
   } else if (currentMode === "add") {
     const cardName = inputName.value;
@@ -120,13 +126,63 @@ buttonAdd.addEventListener("click", openAdd);
 buttonClose.addEventListener("click", closePopup);
 form.addEventListener("submit", handleSubmit);
 
-initialCards.forEach((element) => addNewCard(element.name, element.link));
+initialCards.forEach((el) => addNewCard(el.name, el.link));
 
-function imagePopup(name, link) {
-  popimag.src = link;
-  popimag.alt = name;
-  poptxt.textContent = name;
-  form.style.display = "none";
-  popImg.style.display = "";
-  popup.classList.add("popup_opened");
-}
+const showInputError = (formElement, inputElement, errorMessage) => {
+  const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+  inputElement.classList.add("popup__input_type_error");
+  errorElement.textContent = errorMessage;
+  errorElement.classList.add("popup__error_visible");
+};
+
+const hideInputError = (formElement, inputElement) => {
+  const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+  inputElement.classList.remove("popup__input_type_error");
+  errorElement.classList.remove("popup__error_visible");
+  errorElement.textContent = "";
+};
+
+const checkInputValidity = (formElement, inputElement) => {
+  if (!inputElement.validity.valid) {
+    showInputError(formElement, inputElement, inputElement.validationMessage);
+  } else {
+    hideInputError(formElement, inputElement);
+  }
+};
+
+const hasInvalidInput = (inputList) =>
+  inputList.some((input) => !input.validity.valid);
+
+const toggleButtonState = (inputList, buttonElement) => {
+  if (hasInvalidInput(inputList)) {
+    buttonElement.classList.add("popup__button_disabled");
+    buttonElement.setAttribute("disabled", "");
+  } else {
+    buttonElement.classList.remove("popup__button_disabled");
+    buttonElement.removeAttribute("disabled");
+  }
+};
+
+const setEventListeners = (formElement) => {
+  const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
+  const buttonElement = formElement.querySelector(".popup__button_save");
+
+  toggleButtonState(inputList, buttonElement);
+
+  inputList.forEach((inputElement) => {
+    inputElement.addEventListener("input", () => {
+      checkInputValidity(formElement, inputElement);
+      toggleButtonState(inputList, buttonElement);
+    });
+  });
+};
+
+const enableValidation = () => {
+  const formList = Array.from(document.querySelectorAll(".popup__container"));
+  formList.forEach((formElement) => {
+    formElement.addEventListener("submit", (evt) => evt.preventDefault());
+    setEventListeners(formElement);
+  });
+};
+
+enableValidation();

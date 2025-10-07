@@ -25,22 +25,36 @@
             <p class="popup__paragraph"></p>
           </div>
         </div>
-        <form class="popup__container">
-          <h2 class="popup__subtitle">Editar perfil</h2>
+        <form id="form" class="popup__container">
+          <h2 class="popup__subtitle">Nuevo Lugar</h2>
           <fieldset class="popup__content">
             <input
+              id="place-name"
               type="text"
               class="popup__input popup__input_name"
-              placeholder="Nombre"
+              placeholder="Nombre del Lugar"
+              required
+              minlength="2"
+              maxlength="40"
             />
+            <span class="place-name-error popup__error"></span>
+
             <input
-              type="text"
+              id="place-url"
+              type="url"
               class="popup__input popup__input_about"
-              placeholder="Acerca de mi"
+              placeholder="URL de la imagen"
+              required
             />
+            <span class="place-url-error popup__error"></span>
           </fieldset>
+
           <fieldset class="popup__content">
-            <button type="submit" class="popup__button popup__button_save">
+            <button
+              type="submit"
+              class="popup__button popup__button_save popup__button_disabled"
+              disabled
+            >
               Guardar
             </button>
           </fieldset>
@@ -87,5 +101,6 @@
       </footer>
     </div>
     <script src="./scripts/index.js"></script>
+    <script src="./scripts/validate.js"></script>
   </body>
 </html>

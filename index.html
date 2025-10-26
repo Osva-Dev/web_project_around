@@ -4,10 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Around the U.S.</title>
-    <meta name="description" content="Portafolio de Osvaldo O. en Tripleten" />
-    <meta name="keywords" content="html, css" />
-    <meta name="author" content="Osvaldo O." />
-    <link rel="shortcut icon" href="favicon.svg" />
     <link rel="stylesheet" href="./vendor/normalize.css" />
     <link rel="stylesheet" href="./pages/index.css" />
   </head>
@@ -25,11 +21,41 @@
             <p class="popup__paragraph"></p>
           </div>
         </div>
-        <form id="form" class="popup__container">
+
+        <!-- Formulario Perfil -->
+        <form id="form-profile" class="popup__container">
+          <h2 class="popup__subtitle">Editar Perfil</h2>
+          <fieldset class="popup__content">
+            <input
+              type="text"
+              class="popup__input popup__input_name"
+              placeholder="Nombre"
+              required
+              minlength="2"
+              maxlength="40"
+            />
+            <span class="name-error popup__error"></span>
+
+            <input
+              type="text"
+              class="popup__input popup__input_about"
+              placeholder="Acerca de mi"
+              required
+            />
+            <span class="about-error popup__error"></span>
+          </fieldset>
+          <fieldset class="popup__content">
+            <button type="submit" class="popup__button popup__button_save">
+              Guardar
+            </button>
+          </fieldset>
+        </form>
+
+        <!-- Formulario Lugar -->
+        <form id="form-place" class="popup__container">
           <h2 class="popup__subtitle">Nuevo Lugar</h2>
           <fieldset class="popup__content">
             <input
-              id="place-name"
               type="text"
               class="popup__input popup__input_name"
               placeholder="Nombre del Lugar"
@@ -40,7 +66,6 @@
             <span class="place-name-error popup__error"></span>
 
             <input
-              id="place-url"
               type="url"
               class="popup__input popup__input_about"
               placeholder="URL de la imagen"
@@ -48,18 +73,14 @@
             />
             <span class="place-url-error popup__error"></span>
           </fieldset>
-
           <fieldset class="popup__content">
-            <button
-              type="submit"
-              class="popup__button popup__button_save popup__button_disabled"
-              disabled
-            >
+            <button type="submit" class="popup__button popup__button_save">
               Guardar
             </button>
           </fieldset>
         </form>
       </div>
+
       <header class="header">
         <img
           class="header__logo"
@@ -67,6 +88,7 @@
           alt="Around the U.S."
         />
       </header>
+
       <main class="main">
         <section class="profile">
           <div class="profile__user">
@@ -94,13 +116,35 @@
             </button>
           </div>
         </section>
-        <section class="place"></section>
+
+        <section class="place">
+          <template id="tpl-card">
+            <div class="place__card">
+              <img
+                class="place__delete"
+                src="./images/icons/trash.svg"
+                alt="Eliminar"
+              />
+              <img class="place__image" src="#" alt="" />
+              <div class="place__content">
+                <h2 class="place__title"></h2>
+                <img
+                  class="place__like place__like_active"
+                  src="./images/icons/heart.svg"
+                  alt="Like"
+                />
+              </div>
+            </div>
+          </template>
+        </section>
       </main>
+
       <footer class="footer">
         <p class="footer__copyright">&#169; 2024 Around The U.S.</p>
       </footer>
     </div>
-    <script src="./scripts/index.js"></script>
-    <script src="./scripts/validate.js"></script>
+
+    <!-- Solo index.js -->
+    <script type="module" src="./scripts/index.js"></script>
   </body>
 </html>

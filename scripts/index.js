@@ -1,5 +1,6 @@
 import { Card } from "./Card.js";
 import { FormValidator } from "./FormValidator.js";
+import { UserInfo } from "./UserInfo.js";
 
 const popup = document.querySelector(".popup");
 const buttonClose = popup.querySelector(".popup__button_close");
@@ -10,12 +11,16 @@ const popTxt = popImg.querySelector(".popup__paragraph");
 const formProfile = document.getElementById("form-profile");
 const formPlace = document.getElementById("form-place");
 
-const nameEl = document.querySelector(".profile__name");
-const profession = document.querySelector(".profile__profession");
 const buttonEdit = document.querySelector(".profile__button_edit");
 const buttonAdd = document.querySelector(".profile__button_add");
 
 const placeSection = document.querySelector(".place");
+
+// Instancia UserInfo (pasa los selectores de los elementos en la página)
+const userInfo = new UserInfo({
+  nameSelector: ".profile__name",
+  professionSelector: ".profile__profession",
+});
 
 // Cards iniciales
 const initialCards = [
@@ -42,9 +47,10 @@ const openPopup = (formType) => {
   if (formType === "profile") {
     formProfile.style.display = "block";
     formPlace.style.display = "none";
-    formProfile.querySelector(".popup__input_name").value = nameEl.textContent;
-    formProfile.querySelector(".popup__input_about").value =
-      profession.textContent;
+    // rellenar inputs con la información actual usando UserInfo
+    const { name, profession } = userInfo.getUserInfo();
+    formProfile.querySelector(".popup__input_name").value = name;
+    formProfile.querySelector(".popup__input_about").value = profession;
   } else {
     formPlace.style.display = "block";
     formProfile.style.display = "none";
@@ -79,10 +85,9 @@ new FormValidator(formPlace).enableValidation();
 // Submit formulario perfil
 formProfile.addEventListener("submit", (e) => {
   e.preventDefault();
-  nameEl.textContent = formProfile.querySelector(".popup__input_name").value;
-  profession.textContent = formProfile.querySelector(
-    ".popup__input_about"
-  ).value;
+  const newName = formProfile.querySelector(".popup__input_name").value;
+  const newProfession = formProfile.querySelector(".popup__input_about").value;
+  userInfo.setUserInfo({ name: newName, profession: newProfession });
   closePopup();
 });
 

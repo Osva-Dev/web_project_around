@@ -1,4 +1,4 @@
-class Card {
+export class Card {
   #data;
   #element;
 
@@ -56,5 +56,3 @@ class Card {
     return this.#element;
   }
 }
-
-export { Card };

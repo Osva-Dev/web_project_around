@@ -1,19 +1,16 @@
 import { Card } from "./Card.js";
 import { FormValidator } from "./FormValidator.js";
 import { UserInfo } from "./UserInfo.js";
+import Popup from "./Popup.js";
 
 const popup = document.querySelector(".popup");
-const buttonClose = popup.querySelector(".popup__button_close");
 const popImg = popup.querySelector(".popup__images");
 const popImage = popImg.querySelector(".popup__image");
 const popTxt = popImg.querySelector(".popup__paragraph");
-
 const formProfile = document.getElementById("form-profile");
 const formPlace = document.getElementById("form-place");
-
 const buttonEdit = document.querySelector(".profile__button_edit");
 const buttonAdd = document.querySelector(".profile__button_add");
-
 const placeSection = document.querySelector(".place");
 
 // Instancia UserInfo (pasa los selectores de los elementos en la página)
@@ -21,6 +18,10 @@ const userInfo = new UserInfo({
   nameSelector: ".profile__name",
   professionSelector: ".profile__profession",
 });
+
+// Instancia Popup (usar selector del popup)
+const popupInstance = new Popup(".popup");
+popupInstance.setEventListeners(); // añade cierre por botón y por overlay
 
 // Cards iniciales
 const initialCards = [
@@ -41,7 +42,7 @@ initialCards.forEach((data) => {
   placeSection.prepend(card.getElement());
 });
 
-// Funciones abrir/cerrar popup
+// Funciones abrir/cerrar popup (mantienen lógica de mostrar formularios/imagen)
 const openPopup = (formType) => {
   popImg.style.display = "none";
   if (formType === "profile") {
@@ -56,27 +57,22 @@ const openPopup = (formType) => {
     formProfile.style.display = "none";
     formPlace.reset();
   }
-  popup.classList.add("popup_opened");
+  popupInstance.open();
 };
 
 const closePopup = () => {
-  popup.classList.remove("popup_opened");
+  popupInstance.close();
   formProfile.style.display = "none";
   formPlace.style.display = "none";
   popImg.style.display = "none";
 };
 
-// Inicializar popups
+// Inicializar popups (abrir)
 buttonEdit.addEventListener("click", () => openPopup("profile"));
 buttonAdd.addEventListener("click", () => openPopup("place"));
-buttonClose.addEventListener("click", closePopup);
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && popup.classList.contains("popup_opened"))
-    closePopup();
-});
-popup.addEventListener("click", (e) => {
-  if (e.target === popup) closePopup();
-});
+
+// NOTA: ya no es necesario añadir aquí listeners para cierre (overlay/ESC/botón)
+// porque Popup.setEventListeners() y Popup.open()/close() lo manejan.
 
 // Validaciones
 new FormValidator(formProfile).enableValidation();
@@ -111,5 +107,5 @@ placeSection.addEventListener("card:imageClick", (e) => {
   formProfile.style.display = "none";
   formPlace.style.display = "none";
   popImg.style.display = "block";
-  popup.classList.add("popup_opened");
+  popupInstance.open();
 });

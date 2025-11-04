@@ -1,7 +1,7 @@
-import { Card } from "./Card.js";
-import { FormValidator } from "./FormValidator.js";
-import { UserInfo } from "./UserInfo.js";
-import Popup from "./Popup.js";
+import { Card } from "../components/Card.js";
+import { FormValidator } from "../components/FormValidator.js";
+import { UserInfo } from "../components/UserInfo.js";
+import Popup from "../components/Popup.js";
 
 const popup = document.querySelector(".popup");
 const popImg = popup.querySelector(".popup__images");

@@ -3,6 +3,8 @@ import { FormValidator } from "../components/FormValidator.js";
 import { UserInfo } from "../components/UserInfo.js";
 import Popup from "../components/Popup.js";
 
+import { initialCards } from "../utils/utils.js";
+
 const popup = document.querySelector(".popup");
 const popImg = popup.querySelector(".popup__images");
 const popImage = popImg.querySelector(".popup__image");
@@ -22,19 +24,6 @@ const userInfo = new UserInfo({
 // Instancia Popup (usar selector del popup)
 const popupInstance = new Popup(".popup");
 popupInstance.setEventListeners(); // añade cierre por botón y por overlay
-
-// Cards iniciales
-const initialCards = [
-  { name: "Valle de Yosemite", link: "./images/places/Valle_de_Yosemite.jpg" },
-  { name: "Lago Louise", link: "./images/places/Lago_Louise.png" },
-  { name: "Montañas Calvas", link: "./images/places/Montañas_Calvas.png" },
-  { name: "Latemar", link: "./images/places/Latemar.png" },
-  {
-    name: "Parque Nacional de la Vanoise",
-    link: "./images/places/Vanois__National.png",
-  },
-  { name: "Lago di Braies", link: "./images/places/Lago_di_Braes.png" },
-];
 
 // Crear y añadir cards iniciales
 initialCards.forEach((data) => {

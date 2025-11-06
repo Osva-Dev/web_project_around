@@ -1,9 +1,11 @@
-export class Card {
+export default class Card {
   #data;
   #element;
+  _handleCardClick;
 
-  constructor(data) {
+  constructor(data, handleCardClick) {
     this.#data = data;
+    this._handleCardClick = handleCardClick;
     this.#create();
   }
 
@@ -45,11 +47,17 @@ export class Card {
   }
 
   #showImage() {
-    const event = new CustomEvent("card:imageClick", {
-      detail: { name: this.#data.name, link: this.#data.link },
-      bubbles: true,
-    });
-    this.#element.dispatchEvent(event);
+    // Llamar al callback pasado desde el constructor para abrir el popup con imagen
+    if (typeof this._handleCardClick === "function") {
+      this._handleCardClick({ name: this.#data.name, link: this.#data.link });
+    } else {
+      // Fallback: si no hay callback, mantenemos el comportamiento anterior (CustomEvent)
+      const event = new CustomEvent("card:imageClick", {
+        detail: { name: this.#data.name, link: this.#data.link },
+        bubbles: true,
+      });
+      this.#element.dispatchEvent(event);
+    }
   }
 
   getElement() {

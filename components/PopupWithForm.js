@@ -1,4 +1,3 @@
-// PopupWithForm.js
 import Popup from "./Popup.js";
 
 export default class PopupWithForm extends Popup {
@@ -16,7 +15,6 @@ export default class PopupWithForm extends Popup {
     this._submitHandler = this._submitHandler.bind(this);
   }
 
-  // obtiene los valores de los inputs (clave -> valor)
   _getInputValues() {
     const inputs = this._form.querySelectorAll("input, textarea, select");
     const values = {};
@@ -39,28 +37,23 @@ export default class PopupWithForm extends Popup {
     return values;
   }
 
-  // handler interno de submit
   _submitHandler(evt) {
     evt.preventDefault();
     const inputValues = this._getInputValues();
     this._handleFormSubmit(inputValues);
   }
 
-  // abre el popup (solo lo heredamos)
   open() {
     super.open();
   }
 
-  // cierra el popup y resetea el formulario, además lo oculta
   close() {
     super.close();
     this._form.reset();
     this._form.style.display = "none";
   }
 
-  // añadimos solo el listener de submit, no el de overlay/close
   setEventListeners() {
-    // no llamamos a super.setEventListeners() para evitar duplicar listeners en el mismo .popup
     this._form.addEventListener("submit", this._submitHandler);
   }
 }

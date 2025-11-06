@@ -1,4 +1,4 @@
-class FormValidator {
+export default class FormValidator {
   constructor(formElement) {
     this.form = formElement;
     this.inputList = Array.from(this.form.querySelectorAll(".popup__input"));
@@ -50,5 +50,3 @@ class FormValidator {
     this._setEventListeners();
   }
 }
-
-export { FormValidator };

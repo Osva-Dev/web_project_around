@@ -41,7 +41,7 @@ const cardSection = new Section(
     renderer: (cardData) => {
       const card = new Card(cardData, handleCardClick);
       const cardElement = card.getElement();
-      cardSection.addItem(cardElement);
+      cardSection.addItem(cardElement); // prepend por defecto
     },
   },
   ".place"
@@ -78,7 +78,7 @@ const placePopup = new PopupWithForm(".popup", "#form-place", (inputValues) => {
   if (name && link) {
     const card = new Card({ name, link }, handleCardClick);
     const cardElement = card.getElement();
-    cardSection.addItem(cardElement);
+    cardSection.addItem(cardElement); // aparece al inicio
   }
   placePopup.close();
 });

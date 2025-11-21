@@ -22,11 +22,14 @@ export default class Api {
     }).then(this._checkResponse);
   }
 
-  async setUserInfo({ name, about }) {
-    const res = await fetch(`${this._baseUrl}/users/me`, {
+  setUserInfo({ name, about }) {
+    return fetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",
+      headers: {
+        ...this._headers,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ name, about }),
-    });
-    return this._checkResponse(res);
+    }).then((res) => this._checkResponse(res));
   }
 }

@@ -22,7 +22,7 @@ import Api from "../api/api.js"; // <-- nuevo
 const api = new Api({
   baseUrl: "https://around-api.es.tripleten-services.com/v1",
   headers: {
-    authorization: "deef7c77-f9e7-4733-81e9-ce1d4b6db3d3", // cambia si tienes otro token
+    authorization: "1faf26f8-cbf3-4474-9595-b2e123d917f2", // cambia si tienes otro token
   },
 });
 

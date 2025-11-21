@@ -6,7 +6,6 @@ import PopupWithForm from "../components/PopupWithForm.js";
 import Section from "../components/Section.js";
 
 import {
-  initialCards,
   popImage,
   popTxt,
   popImg,
@@ -51,7 +50,6 @@ const handleCardClick = ({ name, link }) => {
 // ------------------ Sección de cards (sin tocar) ------------------
 const cardSection = new Section(
   {
-    items: initialCards,
     renderer: (cardData) => {
       const card = new Card(cardData, handleCardClick);
       const cardElement = card.getElement();
@@ -186,4 +184,29 @@ api
   .catch((err) => {
     console.error("Error al cargar perfil inicial:", err);
     // opcional: mostrar mensaje en UI
+  });
+
+// ------------------ CARGA DE CARDS DESDE EL SERVIDOR ------------------
+api
+  .getCards()
+  .then((cards) => {
+    // Si quieres mostrar las tarjetas más recientes primero:
+    // cards = cards.reverse();
+
+    // Asegúrate de que cards sea un array
+    if (!Array.isArray(cards)) {
+      throw new Error("Respuesta inesperada: se esperaba un array de tarjetas");
+    }
+
+    // Iterar y renderizar cada tarjeta
+    cards.forEach((cardData) => {
+      // cardData debe tener al menos { name, link, _id, ... }
+      const card = new Card(cardData, handleCardClick);
+      const cardElement = card.getElement();
+      cardSection.addItem(cardElement);
+    });
+  })
+  .catch((err) => {
+    console.error("Error cargando tarjetas desde la API:", err);
+    // opcional: mostrar mensaje al usuario o un fallback (ej. mostrar imagenes locales)
   });

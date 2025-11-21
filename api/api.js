@@ -1,6 +1,6 @@
 export default class Api {
   constructor({ baseUrl, headers }) {
-    this._baseUrl = baseUrl.replace(/\/$/, "");
+    this._baseUrl = baseUrl;
     this._headers = headers;
   }
 
@@ -30,6 +30,12 @@ export default class Api {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ name, about }),
+    }).then((res) => this._checkResponse(res));
+  }
+
+  getCards() {
+    return fetch(`${this._baseUrl}/cards`, {
+      headers: this._headers,
     }).then((res) => this._checkResponse(res));
   }
 }

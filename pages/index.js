@@ -15,7 +15,7 @@ import {
   buttonAdd,
 } from "../utils/utils.js";
 
-import Api from "../api/api.js"; // <-- nuevo
+import Api from "../api/api.js";
 
 // ------------------ Instancia API ------------------
 const api = new Api({
@@ -31,7 +31,7 @@ const userInfo = new UserInfo({
   professionSelector: ".profile__profession",
 });
 
-// UI inicial (mantienes lo que tenías)
+// UI inicial
 formProfile.style.display = "none";
 formPlace.style.display = "none";
 popImg.style.display = "none";
@@ -47,7 +47,7 @@ const handleCardClick = ({ name, link }) => {
   popupImageInstance.open({ name, link });
 };
 
-// ------------------ Sección de cards (sin tocar) ------------------
+// ------------------ Sección de cards ------------------
 const cardSection = new Section(
   {
     renderer: (cardData) => {
@@ -59,10 +59,7 @@ const cardSection = new Section(
   ".place"
 );
 
-cardSection.renderItems();
-
 // ------------------ POPUPS con formularios ------------------
-// PROFILE popup: callback reemplazado para usar API
 const profilePopup = new PopupWithForm(
   ".popup",
   "#form-profile",
@@ -98,7 +95,6 @@ const profilePopup = new PopupWithForm(
     api
       .setUserInfo({ name: newName, about: newAbout })
       .then((updatedUser) => {
-        // Tu UserInfo original espera { name, profession } — adaptamos:
         userInfo.setUserInfo({
           name: updatedUser.name,
           profession: updatedUser.about,
@@ -115,7 +111,7 @@ const profilePopup = new PopupWithForm(
   }
 );
 
-// PLACE popup: sin cambios funcionales
+// PLACE popup: ahora crea la card en el servidor
 const placePopup = new PopupWithForm(".popup", "#form-place", (inputValues) => {
   const name = inputValues.name ?? inputValues["popup__input_name"] ?? "";
   const link =
@@ -124,12 +120,44 @@ const placePopup = new PopupWithForm(".popup", "#form-place", (inputValues) => {
     inputValues["popup__input_about"] ??
     "";
 
-  if (name && link) {
-    const card = new Card({ name, link }, handleCardClick);
-    const cardElement = card.getElement();
-    cardSection.addItem(cardElement); // aparece al inicio
+  const submitBtn = formPlace.querySelector('button[type="submit"]');
+
+  const setLoading = (isLoading) => {
+    if (!submitBtn) return;
+    if (isLoading) {
+      submitBtn.dataset.originalText = submitBtn.textContent;
+      submitBtn.textContent = "Creando...";
+      submitBtn.disabled = true;
+    } else {
+      submitBtn.textContent = submitBtn.dataset.originalText || "Crear";
+      submitBtn.disabled = false;
+    }
+  };
+
+  if (!name || !link) {
+    alert("Rellena nombre y enlace de la imagen.");
+    return;
   }
-  placePopup.close();
+
+  setLoading(true);
+
+  api
+    .createCard({ name, link })
+    .then((createdCard) => {
+      const card = new Card(createdCard, handleCardClick);
+      const cardElement = card.getElement();
+      cardSection.addItem(cardElement); // agrega al inicio
+
+      placePopup.close();
+      formPlace.reset();
+    })
+    .catch((err) => {
+      console.error("Error creando la card en el servidor:", err);
+      alert("No se pudo crear la card. Revisa la consola.");
+    })
+    .finally(() => {
+      setLoading(false);
+    });
 });
 
 profilePopup.setEventListeners();
@@ -168,14 +196,11 @@ new FormValidator(formPlace).enableValidation();
 api
   .getUserInfo()
   .then((userData) => {
-    // userData es { name, about, avatar, _id }
-    // tu UserInfo actual usa { name, profession } -> adaptamos:
     userInfo.setUserInfo({
       name: userData.name,
       profession: userData.about,
     });
 
-    // rellenar inputs del form para que al abrir se vean los datos actuales
     const nameInput = formProfile.querySelector(".popup__input_name");
     const aboutInput = formProfile.querySelector(".popup__input_about");
     if (nameInput) nameInput.value = userData.name || "";
@@ -183,24 +208,18 @@ api
   })
   .catch((err) => {
     console.error("Error al cargar perfil inicial:", err);
-    // opcional: mostrar mensaje en UI
   });
 
 // ------------------ CARGA DE CARDS DESDE EL SERVIDOR ------------------
 api
   .getCards()
   .then((cards) => {
-    // Si quieres mostrar las tarjetas más recientes primero:
-    // cards = cards.reverse();
-
-    // Asegúrate de que cards sea un array
     if (!Array.isArray(cards)) {
       throw new Error("Respuesta inesperada: se esperaba un array de tarjetas");
     }
 
-    // Iterar y renderizar cada tarjeta
-    cards.forEach((cardData) => {
-      // cardData debe tener al menos { name, link, _id, ... }
+    // <-- invertir el array para mostrar las más nuevas primero
+    cards.reverse().forEach((cardData) => {
       const card = new Card(cardData, handleCardClick);
       const cardElement = card.getElement();
       cardSection.addItem(cardElement);
@@ -208,5 +227,4 @@ api
   })
   .catch((err) => {
     console.error("Error cargando tarjetas desde la API:", err);
-    // opcional: mostrar mensaje al usuario o un fallback (ej. mostrar imagenes locales)
   });

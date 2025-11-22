@@ -38,4 +38,15 @@ export default class Api {
       headers: this._headers,
     }).then((res) => this._checkResponse(res));
   }
+
+  createCard({ name, link }) {
+    return fetch(`${this._baseUrl}/cards`, {
+      method: "POST",
+      headers: {
+        ...this._headers,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, link }),
+    }).then(this._checkResponse);
+  }
 }

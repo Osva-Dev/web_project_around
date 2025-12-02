@@ -2,10 +2,12 @@ export default class Card {
   #data;
   #element;
   _handleCardClick;
+  _handleLikeClick;
 
-  constructor(data, handleCardClick) {
+  constructor(data, handleCardClick, handleLikeClick) {
     this.#data = data;
     this._handleCardClick = handleCardClick;
+    this._handleLikeClick = handleLikeClick;
     this.#create();
   }
 
@@ -16,9 +18,16 @@ export default class Card {
     this.#element = template;
 
     this.#element.querySelector(".place__title").textContent = this.#data.name;
+
     const imgEl = this.#element.querySelector(".place__image");
     imgEl.src = this.#data.link;
     imgEl.alt = this.#data.name;
+
+    // Inicializar estado visual del like
+    const likeBtn = this.#element.querySelector(".place__like");
+    likeBtn.src = this.#data.isLiked
+      ? "./images/icons/heart-complete.svg"
+      : "./images/icons/heart.svg";
 
     this.#addEventListeners();
   }
@@ -36,10 +45,18 @@ export default class Card {
   }
 
   #toggleLike() {
-    const likeBtn = this.#element.querySelector(".place__like");
-    likeBtn.src = likeBtn.src.includes("heart.svg")
-      ? "./images/icons/heart-complete.svg"
-      : "./images/icons/heart.svg";
+    if (!this._handleLikeClick) return;
+
+    this._handleLikeClick(this.#data._id, this.#data.isLiked)
+      .then((updatedCard) => {
+        this.#data.isLiked = updatedCard.isLiked;
+
+        const likeBtn = this.#element.querySelector(".place__like");
+        likeBtn.src = updatedCard.isLiked
+          ? "./images/icons/heart-complete.svg"
+          : "./images/icons/heart.svg";
+      })
+      .catch((err) => console.error(err));
   }
 
   #deleteCard() {
@@ -47,16 +64,8 @@ export default class Card {
   }
 
   #showImage() {
-    // Llamar al callback pasado desde el constructor para abrir el popup con imagen
     if (typeof this._handleCardClick === "function") {
       this._handleCardClick({ name: this.#data.name, link: this.#data.link });
-    } else {
-      // Fallback: si no hay callback, mantenemos el comportamiento anterior (CustomEvent)
-      const event = new CustomEvent("card:imageClick", {
-        detail: { name: this.#data.name, link: this.#data.link },
-        bubbles: true,
-      });
-      this.#element.dispatchEvent(event);
     }
   }
 

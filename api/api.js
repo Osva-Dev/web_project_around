@@ -49,4 +49,13 @@ export default class Api {
       body: JSON.stringify({ name, link }),
     }).then(this._checkResponse);
   }
+
+  toggleLike(cardId, isLiked) {
+    const method = isLiked ? "DELETE" : "PUT";
+
+    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
+      method,
+      headers: this._headers,
+    }).then((res) => this._checkResponse(res));
+  }
 }

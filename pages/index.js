@@ -21,7 +21,7 @@ import Api from "../api/api.js";
 const api = new Api({
   baseUrl: "https://around-api.es.tripleten-services.com/v1",
   headers: {
-    authorization: "1faf26f8-cbf3-4474-9595-b2e123d917f2", // cambia si tienes otro token
+    authorization: "1faf26f8-cbf3-4474-9595-b2e123d917f2",
   },
 });
 
@@ -47,19 +47,28 @@ const handleCardClick = ({ name, link }) => {
   popupImageInstance.open({ name, link });
 };
 
-// ------------------ Sección de cards ------------------
+// ------------------ LIKE manejado desde index.js ------------------
+const handleLikeClick = (cardId, isLiked) => {
+  return api.toggleLike(cardId, isLiked); // PUT o DELETE según el estado actual
+};
+
+// ------------------ Sección de tarjetas ------------------
 const cardSection = new Section(
   {
     renderer: (cardData) => {
-      const card = new Card(cardData, handleCardClick);
+      const card = new Card(
+        cardData,
+        handleCardClick,
+        handleLikeClick // <-- agregado
+      );
       const cardElement = card.getElement();
-      cardSection.addItem(cardElement); // prepend por defecto
+      cardSection.addItem(cardElement);
     },
   },
   ".place"
 );
 
-// ------------------ POPUPS con formularios ------------------
+// ------------------ POPUP PERFIL ------------------
 const profilePopup = new PopupWithForm(
   ".popup",
   "#form-profile",
@@ -103,7 +112,7 @@ const profilePopup = new PopupWithForm(
       })
       .catch((err) => {
         console.error("Error al guardar perfil:", err);
-        alert("No se pudo guardar el perfil. Revisa la consola.");
+        alert("No se pudo guardar el perfil.");
       })
       .finally(() => {
         setLoading(false);
@@ -111,7 +120,7 @@ const profilePopup = new PopupWithForm(
   }
 );
 
-// PLACE popup: ahora crea la card en el servidor
+// ------------------ POPUP CREAR TARJETA ------------------
 const placePopup = new PopupWithForm(".popup", "#form-place", (inputValues) => {
   const name = inputValues.name ?? inputValues["popup__input_name"] ?? "";
   const link =
@@ -144,16 +153,21 @@ const placePopup = new PopupWithForm(".popup", "#form-place", (inputValues) => {
   api
     .createCard({ name, link })
     .then((createdCard) => {
-      const card = new Card(createdCard, handleCardClick);
+      const card = new Card(
+        createdCard,
+        handleCardClick,
+        handleLikeClick // <-- agregado
+      );
+
       const cardElement = card.getElement();
-      cardSection.addItem(cardElement); // agrega al inicio
+      cardSection.addItem(cardElement);
 
       placePopup.close();
       formPlace.reset();
     })
     .catch((err) => {
-      console.error("Error creando la card en el servidor:", err);
-      alert("No se pudo crear la card. Revisa la consola.");
+      console.error("Error creando la card:", err);
+      alert("No se pudo crear la card.");
     })
     .finally(() => {
       setLoading(false);
@@ -163,7 +177,7 @@ const placePopup = new PopupWithForm(".popup", "#form-place", (inputValues) => {
 profilePopup.setEventListeners();
 placePopup.setEventListeners();
 
-// ------------------ Abrir popups ------------------
+// ------------------ Función para abrir popups ------------------
 const openPopup = (formType) => {
   formProfile.style.display = "none";
   formPlace.style.display = "none";
@@ -180,9 +194,6 @@ const openPopup = (formType) => {
     formPlace.reset();
     formPlace.style.display = "block";
     placePopup.open();
-  } else if (formType === "image") {
-    popImg.style.display = "block";
-    popupImageInstance.open();
   }
 };
 
@@ -192,7 +203,7 @@ buttonAdd.addEventListener("click", () => openPopup("place"));
 new FormValidator(formProfile).enableValidation();
 new FormValidator(formPlace).enableValidation();
 
-// ------------------ CARGA INICIAL: traer datos del perfil del servidor ------------------
+// ------------------ CARGA PERFIL INICIAL ------------------
 api
   .getUserInfo()
   .then((userData) => {
@@ -207,24 +218,28 @@ api
     if (aboutInput) aboutInput.value = userData.about || "";
   })
   .catch((err) => {
-    console.error("Error al cargar perfil inicial:", err);
+    console.error("Error al cargar perfil:", err);
   });
 
-// ------------------ CARGA DE CARDS DESDE EL SERVIDOR ------------------
+// ------------------ CARGA TARJETAS INICIALES ------------------
 api
   .getCards()
   .then((cards) => {
     if (!Array.isArray(cards)) {
-      throw new Error("Respuesta inesperada: se esperaba un array de tarjetas");
+      throw new Error("Respuesta inesperada: se esperaba un array");
     }
 
-    // <-- invertir el array para mostrar las más nuevas primero
     cards.reverse().forEach((cardData) => {
-      const card = new Card(cardData, handleCardClick);
+      const card = new Card(
+        cardData,
+        handleCardClick,
+        handleLikeClick // <-- agregado
+      );
+
       const cardElement = card.getElement();
       cardSection.addItem(cardElement);
     });
   })
   .catch((err) => {
-    console.error("Error cargando tarjetas desde la API:", err);
+    console.error("Error cargando tarjetas:", err);
   });

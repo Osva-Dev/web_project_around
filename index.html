@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -75,8 +75,6 @@
         </form>
       </div>
 
-      <!-- POPUP DELETE (CORRECTO Y SEPARADO) -->
-      <!-- ================= POPUP ELIMINAR TARJETA ================= -->
       <div class="popup popup__delete" id="popup-delete">
         <button
           class="popup__button_close popup__button_close--delete"
@@ -93,6 +91,29 @@
           </button>
         </div>
       </div>
+
+      <div class="popup popup--profile-picture">
+        <button
+          class="popup__button-close popup__button-close--profile-picture"
+          type="button"
+        >
+          &#x1F7A9;
+        </button>
+
+        <div class="popup__container-profile-picture">
+          <h3 class="popup__subtitle popup__subtitle--profile-picture">
+            Cambiar Foto de Perfil
+          </h3>
+
+          <button
+            class="popup__button popup__button-profile-picture"
+            type="submit"
+          >
+            Guardar
+          </button>
+        </div>
+      </div>
+
       <header class="header">
         <img
           class="header__logo"

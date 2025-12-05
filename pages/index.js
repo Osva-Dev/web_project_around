@@ -18,17 +18,14 @@ import {
 
 import Api from "../api/api.js";
 
+let lastCardToDelete = null; // { element, id }
+
 const deletePopup = new Popup("#popup-delete");
 deletePopup.setEventListeners(); // importante para que el botón de cerrar y overlay funcionen
 
-// función que se pasará a cada tarjeta
 const handleDeleteClick = (cardElement, cardId) => {
-  // por ahora solo abrimos el popup. Si en el futuro quieres
-  // almacenar el cardElement o cardId para borrar luego, guarda en una variable externa.
+  lastCardToDelete = { element: cardElement, id: cardId };
   deletePopup.open();
-
-  // ejemplo (opcional): guardar el elemento para borrar después
-  // lastCardToDelete = { element: cardElement, id: cardId };
 };
 
 // ------------------ Instancia API ------------------
@@ -171,9 +168,9 @@ const placePopup = new PopupWithForm(".popup", "#form-place", (inputValues) => {
       const card = new Card(
         createdCard,
         handleCardClick,
-        handleLikeClick // <-- agregado
+        handleLikeClick,
+        handleDeleteClick
       );
-
       const cardElement = card.getElement();
       cardSection.addItem(cardElement);
 
@@ -259,3 +256,27 @@ api
   .catch((err) => {
     console.error("Error cargando tarjetas:", err);
   });
+
+deletePopup.setEventListeners();
+// ================= CONFIRMAR ELIMINACIÓN =================
+const deleteConfirmBtn = document.querySelector(
+  "#popup-delete .popup__button--delete"
+);
+
+deleteConfirmBtn.addEventListener("click", () => {
+  if (!lastCardToDelete) return;
+
+  const { element, id } = lastCardToDelete;
+
+  api
+    .deleteCard(id)
+    .then(() => {
+      element.remove();
+      lastCardToDelete = null;
+      deletePopup.close();
+    })
+    .catch((err) => {
+      console.error("Error eliminando la tarjeta:", err);
+      alert("No se pudo eliminar la tarjeta.");
+    });
+});

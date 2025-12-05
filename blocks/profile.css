@@ -38,6 +38,10 @@
   opacity: 0;
 }
 
+.profile__picture-wrapper:hover {
+  cursor: pointer;
+}
+
 .profile__picture-wrapper:hover .profile__icon {
   opacity: 1;
 }

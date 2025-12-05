@@ -94,23 +94,40 @@
 
       <div class="popup popup--profile-picture">
         <button
-          class="popup__button-close popup__button-close--profile-picture"
+          class="popup__button popup__button--close popup__button--close-profile-picture"
           type="button"
         >
           &#x1F7A9;
         </button>
 
-        <div class="popup__container-profile-picture">
+        <div class="popup__container popup__container--profile-picture">
           <h3 class="popup__subtitle popup__subtitle--profile-picture">
             Cambiar Foto de Perfil
           </h3>
 
-          <button
-            class="popup__button popup__button-profile-picture"
-            type="submit"
+          <form
+            id="form-profile-picture"
+            class="popup__form popup__form--profile-picture"
           >
-            Guardar
-          </button>
+            <fieldset class="popup__content">
+              <input
+                type="text"
+                class="popup__input popup__input--profile-picture"
+                placeholder="URL de la Imagen"
+                required
+              />
+              <span class="popup__error popup__error--profile-picture"></span>
+            </fieldset>
+
+            <fieldset class="popup__content">
+              <button
+                type="submit"
+                class="popup__button popup__button--save-profile-picture"
+              >
+                Guardar
+              </button>
+            </fieldset>
+          </form>
         </div>
       </div>
 

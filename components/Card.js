@@ -41,7 +41,7 @@ export default class Card {
     this.#element
       .querySelector(".place__delete")
       .addEventListener("click", (evt) => {
-        evt.stopPropagation(); // evitar otros handlers
+        evt.stopPropagation(); 
         if (typeof this._handleDeleteClick === "function") {
           this._handleDeleteClick(this.#element, this.#data._id);
         }

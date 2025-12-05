@@ -19,17 +19,15 @@ export default class PopupWithForm extends Popup {
     const inputs = this._form.querySelectorAll("input, textarea, select");
     const values = {};
     inputs.forEach((input) => {
-      // Preferir input.name si existe
       let key = input.name && input.name.trim() !== "" ? input.name : null;
 
-      // Si no hay name, intentar mapear según la clase (compatibilidad con tu HTML)
       if (!key) {
         const classList = input.className || "";
         if (classList.includes("popup__input_name")) key = "name";
         else if (classList.includes("popup__input_about")) key = "about";
         else if (classList.includes("popup__input_link")) key = "link";
         else if (input.id) key = input.id;
-        else key = `input-${Math.random().toString(36).slice(2, 8)}`; // fallback
+        else key = `input-${Math.random().toString(36).slice(2, 8)}`;
       }
 
       values[key] = input.value;

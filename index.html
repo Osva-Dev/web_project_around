@@ -6,6 +6,7 @@
     <title>Around the U.S.</title>
     <link rel="stylesheet" href="./vendor/normalize.css" />
     <link rel="stylesheet" href="./pages/index.css" />
+    <link rel="icon" href="favicon.svg" type="image/png" />
   </head>
   <body>
     <div class="page">
@@ -111,7 +112,8 @@
           >
             <fieldset class="popup__content">
               <input
-                type="text"
+                type="url"
+                name="avatar"
                 class="popup__input popup__input--profile-picture"
                 placeholder="URL de la Imagen"
                 required
@@ -142,11 +144,7 @@
         <section class="profile">
           <div class="profile__user">
             <div class="profile__picture-wrapper">
-              <img
-                class="profile__picture"
-                src="images/content/Profile_Photo.jpg"
-                alt="Profile Picture"
-              />
+              <img class="profile__picture" src="" alt="Profile Picture" />
               <img
                 class="profile__icon"
                 src="./images/icons/edit-2.svg"

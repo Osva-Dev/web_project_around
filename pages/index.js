@@ -19,10 +19,8 @@ import {
   btnOpenProfilePicture,
 } from "../utils/utils.js";
 
-//VARIABLES GLOBALES
 let lastCardToDelete = null;
 
-//POPUP DELETE
 const deletePopup = new Popup("#popup-delete");
 deletePopup.setEventListeners();
 
@@ -36,8 +34,20 @@ const api = new Api({
   baseUrl: "https://around-api.es.tripleten-services.com/v1",
   headers: {
     authorization: "1faf26f8-cbf3-4474-9595-b2e123d917f2",
+    "Content-Type": "application/json",
   },
 });
+
+//AGREGAR MÉTODO PARA CAMBIO DE AVATAR
+api.setUserAvatar = function ({ avatar }) {
+  return fetch(`${this._baseUrl}/users/me/avatar`, {
+    method: "PATCH",
+    headers: this._headers,
+    body: JSON.stringify({ avatar }),
+  }).then((res) =>
+    res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
+  );
+};
 
 //USER INFO
 const userInfo = new UserInfo({
@@ -219,13 +229,59 @@ buttonAdd.addEventListener("click", () => openPopup("place"));
 new FormValidator(formProfile).enableValidation();
 new FormValidator(formPlace).enableValidation();
 
-// Seleccionar el popup
-const popupProfilePicture = new Popup(".popup--profile-picture");
-popupProfilePicture.setEventListeners();
+//POPUP CAMBIO DE FOTO DE PERFIL
+const profilePicturePopup = new PopupWithForm(
+  ".popup--profile-picture",
+  "#form-profile-picture",
+  (inputValues) => {
+    const avatarUrl =
+      inputValues.avatar || inputValues["popup__input--profile-picture"];
 
-btnOpenProfilePicture.addEventListener("click", () => {
-  popupProfilePicture.open();
-});
+    if (
+      !avatarUrl ||
+      !/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i.test(avatarUrl)
+    ) {
+      alert("Introduce un enlace válido para la imagen de perfil");
+      return;
+    }
+
+    const submitBtn = document.querySelector(
+      ".popup__button--save-profile-picture"
+    );
+
+    const setLoading = (isLoading) => {
+      if (!submitBtn) return;
+      if (isLoading) {
+        submitBtn.dataset.originalText = submitBtn.textContent;
+        submitBtn.textContent = "Guardando...";
+        submitBtn.disabled = true;
+      } else {
+        submitBtn.textContent = submitBtn.dataset.originalText || "Guardar";
+        submitBtn.disabled = false;
+      }
+    };
+
+    setLoading(true);
+
+    api
+      .setUserAvatar({ avatar: avatarUrl })
+      .then((updatedUser) => {
+        const profileImage = document.querySelector(".profile__picture");
+        if (profileImage) profileImage.src = updatedUser.avatar;
+        profilePicturePopup.close();
+      })
+      .catch((err) => {
+        console.error("Error al actualizar la foto de perfil:", err);
+        alert("No se pudo cambiar la foto de perfil.");
+      })
+      .finally(() => setLoading(false));
+  }
+);
+
+profilePicturePopup.setEventListeners();
+btnOpenProfilePicture.addEventListener("click", () =>
+  profilePicturePopup.open()
+);
 
 //CARGA PERFIL INICIAL
 api
@@ -238,9 +294,13 @@ api
 
     const nameInput = formProfile.querySelector(".popup__input_name");
     const aboutInput = formProfile.querySelector(".popup__input_about");
-
     if (nameInput) nameInput.value = userData.name || "";
     if (aboutInput) aboutInput.value = userData.about || "";
+
+    const profileImage = document.querySelector(".profile__picture");
+    if (profileImage && userData.avatar) {
+      profileImage.src = userData.avatar;
+    }
   })
   .catch((err) => {
     console.error("Error al cargar perfil:", err);

@@ -59,11 +59,20 @@ export default class Api {
     }).then((res) => this._checkResponse(res));
   }
 
-  // dentro de class Api { ... }
   deleteCard(cardId) {
     return fetch(`${this._baseUrl}/cards/${cardId}`, {
       method: "DELETE",
       headers: this._headers,
     }).then((res) => this._checkResponse(res));
+  }
+
+  updateAvatar(avatarUrl) {
+    return fetch(`${this._baseUrl}/users/me/avatar`, {
+      method: "PATCH",
+      headers: this._headers,
+      body: JSON.stringify({
+        avatar: avatarUrl,
+      }),
+    }).then(this._checkResponse);
   }
 }

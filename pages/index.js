@@ -6,6 +6,7 @@ import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import Section from "../components/Section.js";
 import Popup from "../components/Popup.js";
+import Api from "../api/api.js";
 
 import {
   popImage,
@@ -15,9 +16,8 @@ import {
   formPlace,
   buttonEdit,
   buttonAdd,
+  btnOpenProfilePicture,
 } from "../utils/utils.js";
-
-import Api from "../api/api.js";
 
 //VARIABLES GLOBALES
 let lastCardToDelete = null;
@@ -218,6 +218,14 @@ buttonAdd.addEventListener("click", () => openPopup("place"));
 
 new FormValidator(formProfile).enableValidation();
 new FormValidator(formPlace).enableValidation();
+
+// Seleccionar el popup
+const popupProfilePicture = new Popup(".popup--profile-picture");
+popupProfilePicture.setEventListeners();
+
+btnOpenProfilePicture.addEventListener("click", () => {
+  popupProfilePicture.open();
+});
 
 //CARGA PERFIL INICIAL
 api

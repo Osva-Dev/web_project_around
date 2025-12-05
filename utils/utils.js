@@ -13,3 +13,7 @@ export const buttonEdit = document.querySelector(".profile__button_edit");
 export const buttonAdd = document.querySelector(".profile__button_add");
 
 export const placeSection = document.querySelector(".place");
+
+export const btnOpenProfilePicture = document.querySelector(
+  ".profile__picture-wrapper"
+);

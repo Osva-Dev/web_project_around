@@ -4,6 +4,7 @@ import UserInfo from "../components/UserInfo.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import Section from "../components/Section.js";
+import Popup from "../components/Popup.js";
 
 import {
   popImage,
@@ -16,6 +17,19 @@ import {
 } from "../utils/utils.js";
 
 import Api from "../api/api.js";
+
+const deletePopup = new Popup("#popup-delete");
+deletePopup.setEventListeners(); // importante para que el botón de cerrar y overlay funcionen
+
+// función que se pasará a cada tarjeta
+const handleDeleteClick = (cardElement, cardId) => {
+  // por ahora solo abrimos el popup. Si en el futuro quieres
+  // almacenar el cardElement o cardId para borrar luego, guarda en una variable externa.
+  deletePopup.open();
+
+  // ejemplo (opcional): guardar el elemento para borrar después
+  // lastCardToDelete = { element: cardElement, id: cardId };
+};
 
 // ------------------ Instancia API ------------------
 const api = new Api({
@@ -59,7 +73,8 @@ const cardSection = new Section(
       const card = new Card(
         cardData,
         handleCardClick,
-        handleLikeClick // <-- agregado
+        handleLikeClick,
+        handleDeleteClick // <-- agregado aquí
       );
       const cardElement = card.getElement();
       cardSection.addItem(cardElement);
@@ -233,7 +248,8 @@ api
       const card = new Card(
         cardData,
         handleCardClick,
-        handleLikeClick // <-- agregado
+        handleLikeClick,
+        handleDeleteClick // <-- agregar también aquí
       );
 
       const cardElement = card.getElement();

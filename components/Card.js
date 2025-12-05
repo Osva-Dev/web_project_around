@@ -1,16 +1,15 @@
-// Card.js
 export default class Card {
   #data;
   #element;
   _handleCardClick;
   _handleLikeClick;
-  _handleDeleteClick; // nuevo
+  _handleDeleteClick;
 
   constructor(data, handleCardClick, handleLikeClick, handleDeleteClick) {
     this.#data = data;
     this._handleCardClick = handleCardClick;
     this._handleLikeClick = handleLikeClick;
-    this._handleDeleteClick = handleDeleteClick; // almacenar callback
+    this._handleDeleteClick = handleDeleteClick;
     this.#create();
   }
 
@@ -26,7 +25,6 @@ export default class Card {
     imgEl.src = this.#data.link;
     imgEl.alt = this.#data.name;
 
-    // Inicializar estado visual del like
     const likeBtn = this.#element.querySelector(".place__like");
     likeBtn.src = this.#data.isLiked
       ? "./images/icons/heart-complete.svg"
@@ -40,13 +38,11 @@ export default class Card {
       .querySelector(".place__like")
       .addEventListener("click", () => this.#toggleLike());
 
-    // reemplazamos la eliminación inmediata por un callback que abre el popup
     this.#element
       .querySelector(".place__delete")
       .addEventListener("click", (evt) => {
         evt.stopPropagation(); // evitar otros handlers
         if (typeof this._handleDeleteClick === "function") {
-          // le pasamos la referencia del elemento y el id de la card (si existe)
           this._handleDeleteClick(this.#element, this.#data._id);
         }
       });
@@ -71,7 +67,6 @@ export default class Card {
       .catch((err) => console.error(err));
   }
 
-  // Nota: por ahora dejamos #deleteCard para uso futuro (cuando confirmes)
   #deleteCard() {
     this.#element.remove();
   }

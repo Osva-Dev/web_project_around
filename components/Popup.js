@@ -7,8 +7,6 @@ export default class Popup {
     }
 
     this._buttonClose = this._popup.querySelector(".popup__button_close");
-
-    // Bind
     this._handleEscClose = this._handleEscClose.bind(this);
     this._handleOverlayClose = this._handleOverlayClose.bind(this);
   }

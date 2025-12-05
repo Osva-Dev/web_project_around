@@ -1,10 +1,10 @@
 .place {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start; /* inicia de izquierda a derecha */
+  justify-content: flex-start;
   row-gap: 17px;
   column-gap: 20px;
-  margin: 50px auto 67px auto; /* centra el bloque en la página */
+  margin: 50px auto 67px auto;
   max-width: 950px;
 }
 

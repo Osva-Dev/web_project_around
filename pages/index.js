@@ -1,3 +1,4 @@
+//                  IMPORTS
 import Card from "../components/Card.js";
 import FormValidator from "../components/FormValidator.js";
 import UserInfo from "../components/UserInfo.js";
@@ -18,17 +19,19 @@ import {
 
 import Api from "../api/api.js";
 
-let lastCardToDelete = null; // { element, id }
+//VARIABLES GLOBALES
+let lastCardToDelete = null;
 
+//POPUP DELETE
 const deletePopup = new Popup("#popup-delete");
-deletePopup.setEventListeners(); // importante para que el botón de cerrar y overlay funcionen
+deletePopup.setEventListeners();
 
 const handleDeleteClick = (cardElement, cardId) => {
   lastCardToDelete = { element: cardElement, id: cardId };
   deletePopup.open();
 };
 
-// ------------------ Instancia API ------------------
+//API INSTANCE
 const api = new Api({
   baseUrl: "https://around-api.es.tripleten-services.com/v1",
   headers: {
@@ -36,18 +39,17 @@ const api = new Api({
   },
 });
 
-// ------------------ UserInfo ------------------
+//USER INFO
 const userInfo = new UserInfo({
   nameSelector: ".profile__name",
   professionSelector: ".profile__profession",
 });
 
-// UI inicial
 formProfile.style.display = "none";
 formPlace.style.display = "none";
 popImg.style.display = "none";
 
-// ------------------ Popup Imagen ------------------
+//POPUP IMAGEN
 const popupImageInstance = new PopupWithImage(".popup", popImage, popTxt);
 popupImageInstance.setEventListeners();
 
@@ -58,12 +60,12 @@ const handleCardClick = ({ name, link }) => {
   popupImageInstance.open({ name, link });
 };
 
-// ------------------ LIKE manejado desde index.js ------------------
+//LIKE HANDLER
 const handleLikeClick = (cardId, isLiked) => {
-  return api.toggleLike(cardId, isLiked); // PUT o DELETE según el estado actual
+  return api.toggleLike(cardId, isLiked);
 };
 
-// ------------------ Sección de tarjetas ------------------
+//SECTION (RENDER TARJETAS)
 const cardSection = new Section(
   {
     renderer: (cardData) => {
@@ -71,8 +73,9 @@ const cardSection = new Section(
         cardData,
         handleCardClick,
         handleLikeClick,
-        handleDeleteClick // <-- agregado aquí
+        handleDeleteClick
       );
+
       const cardElement = card.getElement();
       cardSection.addItem(cardElement);
     },
@@ -80,7 +83,7 @@ const cardSection = new Section(
   ".place"
 );
 
-// ------------------ POPUP PERFIL ------------------
+//POPUP EDITAR PERFIL
 const profilePopup = new PopupWithForm(
   ".popup",
   "#form-profile",
@@ -132,7 +135,7 @@ const profilePopup = new PopupWithForm(
   }
 );
 
-// ------------------ POPUP CREAR TARJETA ------------------
+//POPUP CREAR TARJETA
 const placePopup = new PopupWithForm(".popup", "#form-place", (inputValues) => {
   const name = inputValues.name ?? inputValues["popup__input_name"] ?? "";
   const link =
@@ -171,6 +174,7 @@ const placePopup = new PopupWithForm(".popup", "#form-place", (inputValues) => {
         handleLikeClick,
         handleDeleteClick
       );
+
       const cardElement = card.getElement();
       cardSection.addItem(cardElement);
 
@@ -189,7 +193,7 @@ const placePopup = new PopupWithForm(".popup", "#form-place", (inputValues) => {
 profilePopup.setEventListeners();
 placePopup.setEventListeners();
 
-// ------------------ Función para abrir popups ------------------
+//FUNCIÓN PARA ABRIR POPUPS
 const openPopup = (formType) => {
   formProfile.style.display = "none";
   formPlace.style.display = "none";
@@ -215,7 +219,7 @@ buttonAdd.addEventListener("click", () => openPopup("place"));
 new FormValidator(formProfile).enableValidation();
 new FormValidator(formPlace).enableValidation();
 
-// ------------------ CARGA PERFIL INICIAL ------------------
+//CARGA PERFIL INICIAL
 api
   .getUserInfo()
   .then((userData) => {
@@ -226,6 +230,7 @@ api
 
     const nameInput = formProfile.querySelector(".popup__input_name");
     const aboutInput = formProfile.querySelector(".popup__input_about");
+
     if (nameInput) nameInput.value = userData.name || "";
     if (aboutInput) aboutInput.value = userData.about || "";
   })
@@ -233,7 +238,7 @@ api
     console.error("Error al cargar perfil:", err);
   });
 
-// ------------------ CARGA TARJETAS INICIALES ------------------
+//CARGA TARJETAS INICIALES
 api
   .getCards()
   .then((cards) => {
@@ -246,7 +251,7 @@ api
         cardData,
         handleCardClick,
         handleLikeClick,
-        handleDeleteClick // <-- agregar también aquí
+        handleDeleteClick
       );
 
       const cardElement = card.getElement();
@@ -257,8 +262,9 @@ api
     console.error("Error cargando tarjetas:", err);
   });
 
+//CONFIRMAR ELIMINACIÓN
 deletePopup.setEventListeners();
-// ================= CONFIRMAR ELIMINACIÓN =================
+
 const deleteConfirmBtn = document.querySelector(
   "#popup-delete .popup__button--delete"
 );
